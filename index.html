@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite Especial</title>
+    <style>
+        body {
+            background-color: #ffcccc;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff3366;
+        }
+
+        .heart {
+            font-size: 50px;
+            color: #ff3366;
+            cursor: pointer;
+        }
+
+        #nao {
+            font-size: 24px;
+            color: #333;
+            background-color: #ffcccc;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+        }
+
+        /* Estilo para corações voadores */
+        .heart-flying {
+            position: absolute;
+            animation: fly 5s linear infinite;
+        }
+
+        /* Keyframes para animação de voo */
+        @keyframes fly {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                transform: translate(-100vw, -100vh) rotate(720deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Convite Especial</h1>
+        <p>Olá Isa!</p> 
+        <p>Você aceitaria sair comigo?</p> 
+        <p>(o dia será de acordo com sua disponibilidade para poder sair, o local podemos escolher juntos)</p> 
+        <p class="heart" onclick="mostrarResposta()">Sim!</p>
+        <button id="nao" onmouseover="mudarPosicao()">Não</button>
+        <div id="resposta" style="display: none;"></div>
+    </div>
+    <script>
+        function mostrarResposta() {
+            const respostaDiv = document.getElementById('resposta');
+            respostaDiv.style.display = 'block';
+            
+            // Cria a imagem
+            const img = document.createElement('img');
+            img.src = 'imagem/Justin.jpg'; // Substitua pelo caminho correto da imagem ----- alterar
+            img.style.width = '200px'; // Ajuste conforme necessário
+            img.style.height = '200px'; // Ajuste conforme necessário
+            respostaDiv.appendChild(img);
+            
+            // Adiciona o texto
+            const textoResposta = document.createElement('p');
+            textoResposta.innerHTML = 'Agora que você aceitou, não tem mais volta! 😘';
+            respostaDiv.appendChild(textoResposta);
+            
+            // Cria corações voadores
+            for (let i = 0; i < 10; i++) {
+                criarCoraçãoVoador();
+            }
+        }
+
+        function mudarPosicao() {
+            const buttonNao = document.getElementById('nao');
+            const randomX = Math.floor(Math.random() * window.innerWidth);
+            const randomY = Math.floor(Math.random() * window.innerHeight);
+            buttonNao.style.left = randomX + 'px';
+            buttonNao.style.top = randomY + 'px';
+        }
+
+        function criarCoraçãoVoador() {
+            const heart = document.createElement('span');
+            heart.innerHTML = '❤';
+            heart.classList.add('heart-flying');
+            document.body.appendChild(heart);
+            // Define uma posição inicial aleatória
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.top = Math.random() * window.innerHeight + 'px';
+            // Remove o coração após a animação terminar
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+        }
+    </script>
+</body>
+</html>
