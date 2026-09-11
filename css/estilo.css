@@ -1,0 +1,339 @@
+/* =============================================================
+   CORES E MEDIDAS
+   Mude as variáveis abaixo para trocar o visual inteiro.
+   ============================================================= */
+:root {
+  --algodao: #FFD3DF;  /* fundo da página */
+  --cereja: #C8102E;   /* ingresso */
+  --papel: #FFF6EE;    /* textos claros e botão Sim */
+  --vinho: #4A0A1C;    /* sombras e botão Não */
+  --dourado: #F2B544;  /* destaques */
+
+  --raio: 22px;        /* arredondamento do ingresso */
+  --furo: 14px;        /* raio dos "furos" na linha picotada */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--algodao);
+  color: var(--vinho);
+  font-family: "Figtree", system-ui, sans-serif;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.palco {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px 40px;
+}
+
+/* =============================================================
+   INGRESSO
+   Duas partes (corpo e canhoto) com meio-círculos "recortados"
+   na junção. O recorte é feito com radial-gradient transparente,
+   e o drop-shadow desenha a sombra seguindo esse formato.
+   ============================================================= */
+.ingresso {
+  width: min(100%, 390px);
+  color: var(--papel);
+  text-align: center;
+  filter: drop-shadow(8px 8px 0 var(--vinho));
+}
+
+.ingresso__corpo,
+.ingresso__canhoto {
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: 51% 100%;
+}
+
+.ingresso__corpo {
+  padding: 40px 28px 32px;
+  border-radius: var(--raio) var(--raio) 0 0;
+  background-image:
+    radial-gradient(circle at 0 100%, transparent var(--furo), var(--cereja) calc(var(--furo) + 0.5px)),
+    radial-gradient(circle at 100% 100%, transparent var(--furo), var(--cereja) calc(var(--furo) + 0.5px));
+  background-position: left, right;
+}
+
+.ingresso__canhoto {
+  margin-top: -1px; /* cobre a fresta de 1px entre as duas partes */
+  padding: 29px 24px 30px;
+  border-radius: 0 0 var(--raio) var(--raio);
+  background-image:
+    radial-gradient(circle at 0 0, transparent var(--furo), var(--cereja) calc(var(--furo) + 0.5px)),
+    radial-gradient(circle at 100% 0, transparent var(--furo), var(--cereja) calc(var(--furo) + 0.5px));
+  background-position: left, right;
+}
+
+/* Linha picotada entre o corpo e o canhoto */
+.ingresso__canhoto::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: calc(var(--furo) + 10px);
+  right: calc(var(--furo) + 10px);
+  border-top: 3px dashed rgba(255, 246, 238, 0.45);
+}
+
+.ingresso__canhoto--botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+
+/* =============================================================
+   TEXTOS
+   ============================================================= */
+.nome {
+  margin: 0;
+  font-family: "Shrikhand", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(3rem, 15vw, 4.25rem);
+  line-height: 1.05;
+  color: var(--papel);
+  overflow-wrap: anywhere;
+  text-shadow: 3px 3px 0 var(--vinho);
+}
+
+.pergunta {
+  margin: 12px 0 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.detalhe {
+  margin: 14px auto 0;
+  max-width: 30ch;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.titulo-resposta {
+  margin: 8px 0 0;
+  font-family: "Shrikhand", Georgia, serif;
+  font-weight: 400;
+  font-size: 1.9rem;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+h1:focus,
+h2:focus {
+  outline: none;
+}
+
+/* =============================================================
+   BOTÕES
+   ============================================================= */
+.botao {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 52px;
+  padding: 12px 26px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--vinho);
+  transition: transform 0.12s, box-shadow 0.12s;
+  touch-action: manipulation;
+}
+
+.botao:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--vinho);
+}
+
+.botao:focus-visible {
+  outline: 3px solid var(--dourado);
+  outline-offset: 3px;
+}
+
+.botao--sim {
+  min-width: 140px;
+  background: var(--papel);
+  color: var(--cereja);
+  font-size: 1.35rem;
+}
+
+.botao--nao {
+  background: var(--vinho);
+  color: var(--papel);
+  box-shadow: 4px 4px 0 rgba(74, 10, 28, 0.35);
+}
+
+.botao--largo {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* O "Não" quando está fugindo: sai do ingresso e flutua na tela */
+.botao--nao.fugindo {
+  position: fixed;
+  z-index: 10;
+  margin: 0;
+  white-space: nowrap;
+  transition: left 0.28s ease-out, top 0.28s ease-out;
+}
+
+/* =============================================================
+   CARIMBO (tela do Sim)
+   ============================================================= */
+.carimbo {
+  display: block;
+  width: 150px;
+  height: 150px;
+  margin: -8px auto 4px;
+  transform: rotate(-12deg);
+  animation: carimbar 0.55s cubic-bezier(0.2, 0.8, 0.3, 1.2) both;
+}
+
+@keyframes carimbar {
+  0% {
+    opacity: 0;
+    transform: scale(2.4) rotate(-40deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.9) rotate(-12deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-12deg);
+  }
+}
+
+/* =============================================================
+   OPÇÕES DE DIA E LUGAR
+   Cada opção é um <input type="radio"> escondido + um <span> visível.
+   ============================================================= */
+.escolha {
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+}
+
+.escolha legend {
+  margin: 0 auto 10px;
+  padding: 0;
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.opcao input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.opcao span {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 2px solid rgba(255, 246, 238, 0.55);
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.opcao input:checked + span {
+  background: var(--papel);
+  border-color: var(--papel);
+  color: var(--cereja);
+}
+
+.opcao input:focus-visible + span {
+  outline: 3px solid var(--dourado);
+  outline-offset: 2px;
+}
+
+/* =============================================================
+   CORAÇÕES E CONFETES
+   ============================================================= */
+.efeitos {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.particula {
+  position: absolute;
+  top: -40px;
+  animation-name: cair;
+  animation-timing-function: cubic-bezier(0.35, 0.1, 0.7, 1);
+  animation-fill-mode: both;
+}
+
+.particula--coracao {
+  font-size: 28px;
+  line-height: 1;
+  color: var(--cor);
+}
+
+.particula--confete {
+  width: 9px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--cor);
+}
+
+@keyframes cair {
+  from {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  to {
+    transform: translate3d(var(--deriva), calc(100vh + 80px), 0) rotate(var(--giro));
+  }
+}
+
+/* =============================================================
+   MENOS MOVIMENTO
+   Quem ativou "reduzir movimento" no celular não vê animações.
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .carimbo {
+    animation: none;
+  }
+
+  .botao,
+  .botao--nao.fugindo,
+  .opcao span {
+    transition: none;
+  }
+}

@@ -1,110 +1,85 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convite Especial</title>
-    <style>
-        body {
-            background-color: #ffcccc;
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tenho um convite pra você</title>
+  <meta name="description" content="Abre aí, é rapidinho.">
+  <meta name="theme-color" content="#FFD3DF">
 
-        .container {
-            padding: 20px;
-        }
+  <!-- Preview do link no WhatsApp/Instagram (Open Graph).
+       O WhatsApp não roda JavaScript, então aqui não dá para usar o nome dela. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Tenho um convite pra você 💌">
+  <meta property="og:description" content="Abre aí, é rapidinho.">
+  <meta property="og:image" content="https://joaofaccio087.github.io/Convite/imagem/preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://joaofaccio087.github.io/Convite/">
+  <meta name="twitter:card" content="summary_large_image">
 
-        h1 {
-            color: #ff3366;
-        }
+  <link rel="icon" href="imagem/carimbo.svg" type="image/svg+xml">
 
-        .heart {
-            font-size: 50px;
-            color: #ff3366;
-            cursor: pointer;
-        }
+  <!-- Fontes: Shrikhand (nome) e Figtree (texto) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&family=Shrikhand&display=swap">
 
-        #nao {
-            font-size: 24px;
-            color: #333;
-            background-color: #ffcccc;
-            border: none;
-            cursor: pointer;
-            position: absolute;
-        }
-
-        /* Estilo para corações voadores */
-        .heart-flying {
-            position: absolute;
-            animation: fly 5s linear infinite;
-        }
-
-        /* Keyframes para animação de voo */
-        @keyframes fly {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            100% {
-                transform: translate(-100vw, -100vh) rotate(720deg);
-            }
-        }
-    </style>
+  <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Convite Especial</h1>
-        <p>Olá Isa!</p> 
-        <p>Você aceitaria sair comigo?</p> 
-        <p>(o dia será de acordo com sua disponibilidade para poder sair, o local podemos escolher juntos)</p> 
-        <p class="heart" onclick="mostrarResposta()">Sim!</p>
-        <button id="nao" onmouseover="mudarPosicao()">Não</button>
-        <div id="resposta" style="display: none;"></div>
-    </div>
-    <script>
-        function mostrarResposta() {
-            const respostaDiv = document.getElementById('resposta');
-            respostaDiv.style.display = 'block';
-            
-            // Cria a imagem
-            const img = document.createElement('img');
-            img.src = 'imagem/Justin.jpg'; // Substitua pelo caminho correto da imagem ----- alterar
-            img.style.width = '200px'; // Ajuste conforme necessário
-            img.style.height = '200px'; // Ajuste conforme necessário
-            respostaDiv.appendChild(img);
-            
-            // Adiciona o texto
-            const textoResposta = document.createElement('p');
-            textoResposta.innerHTML = 'Agora que você aceitou, não tem mais volta! 😘';
-            respostaDiv.appendChild(textoResposta);
-            
-            // Cria corações voadores
-            for (let i = 0; i < 10; i++) {
-                criarCoraçãoVoador();
-            }
-        }
+  <main class="palco">
 
-        function mudarPosicao() {
-            const buttonNao = document.getElementById('nao');
-            const randomX = Math.floor(Math.random() * window.innerWidth);
-            const randomY = Math.floor(Math.random() * window.innerHeight);
-            buttonNao.style.left = randomX + 'px';
-            buttonNao.style.top = randomY + 'px';
-        }
+    <!-- TELA 1: o convite -->
+    <section class="ingresso" id="tela-convite" aria-labelledby="titulo-convite">
+      <div class="ingresso__corpo">
+        <h1 class="nome" id="titulo-convite" tabindex="-1"><span id="nome">Érika</span>,</h1>
+        <p class="pergunta">você aceitaria sair comigo?</p>
+        <p class="detalhe">O dia fica a seu critério, e o lugar a gente escolhe junto.</p>
+      </div>
+      <div class="ingresso__canhoto ingresso__canhoto--botoes">
+        <button class="botao botao--sim" id="btn-sim" type="button">Sim!</button>
+        <button class="botao botao--nao" id="btn-nao" type="button">Não</button>
+      </div>
+    </section>
 
-        function criarCoraçãoVoador() {
-            const heart = document.createElement('span');
-            heart.innerHTML = '❤';
-            heart.classList.add('heart-flying');
-            document.body.appendChild(heart);
-            // Define uma posição inicial aleatória
-            heart.style.left = Math.random() * window.innerWidth + 'px';
-            heart.style.top = Math.random() * window.innerHeight + 'px';
-            // Remove o coração após a animação terminar
-            heart.addEventListener('animationend', () => {
-                heart.remove();
-            });
-        }
-    </script>
+    <!-- TELA 2: depois do "Sim" -->
+    <section class="ingresso" id="tela-sim" aria-labelledby="titulo-sim" hidden>
+      <div class="ingresso__corpo">
+        <img class="carimbo" src="imagem/carimbo.svg" alt="Carimbo: convite aceito" width="150" height="150">
+        <h2 class="titulo-resposta" id="titulo-sim" tabindex="-1">Agora não tem mais volta! 😘</h2>
+        <p class="detalhe">Me ajuda a planejar:</p>
+      </div>
+      <div class="ingresso__canhoto">
+        <fieldset class="escolha">
+          <legend>Qual dia fica melhor?</legend>
+          <div class="opcoes" id="opcoes-dia"></div>
+        </fieldset>
+        <fieldset class="escolha">
+          <legend>E o lugar?</legend>
+          <div class="opcoes" id="opcoes-lugar"></div>
+        </fieldset>
+        <a class="botao botao--sim botao--largo" id="link-sim" href="#" target="_blank" rel="noopener">Responder no WhatsApp</a>
+      </div>
+    </section>
+
+    <!-- TELA 3: depois do "Não" -->
+    <section class="ingresso" id="tela-nao" aria-labelledby="titulo-nao" hidden>
+      <div class="ingresso__corpo">
+        <h2 class="titulo-resposta" id="titulo-nao" tabindex="-1">Tudo bem, fica pra próxima 🙂</h2>
+        <p class="detalhe">Obrigado por responder com sinceridade.</p>
+      </div>
+      <div class="ingresso__canhoto ingresso__canhoto--botoes">
+        <a class="botao botao--nao botao--largo" id="link-nao" href="#" target="_blank" rel="noopener">Avisar pelo WhatsApp</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Corações e confetes caem aqui dentro -->
+  <div class="efeitos" id="efeitos" aria-hidden="true"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/convite.js"></script>
 </body>
 </html>
