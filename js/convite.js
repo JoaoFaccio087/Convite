@@ -3,9 +3,11 @@ const reduzirMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").m
 
 const telaConvite = document.getElementById("tela-convite");
 const telaSim = document.getElementById("tela-sim");
+const telaNao = document.getElementById("tela-nao");
 const btnSim = document.getElementById("btn-sim");
 const btnNao = document.getElementById("btn-nao");
 const linkSim = document.getElementById("link-sim");
+const linkNao = document.getElementById("link-nao");
 const efeitos = document.getElementById("efeitos");
 
 iniciar();
@@ -23,6 +25,10 @@ function iniciar() {
 
   telaSim.addEventListener("change", atualizarLinkSim);
   atualizarLinkSim();
+
+  linkNao.href = linkWhatsApp(
+    `Oi, ${CONFIG.seuNome}! Valeu pelo convite, mas dessa vez não vai rolar 🙂`
+  );
 }
 
 function lerNome() {
@@ -41,41 +47,61 @@ function mostrarRecado() {
 }
 
 function responderSim() {
-  telaConvite.hidden = true;
-  telaSim.hidden = false;
-  btnNao.remove();
-  document.getElementById("titulo-sim").focus();
-  window.scrollTo(0, 0);
+  mostrarTela(telaSim);
   soltarCoracoes();
 }
 
+function responderNao() {
+  mostrarTela(telaNao);
+}
+
+function mostrarTela(telaVisivel) {
+  for (const tela of [telaConvite, telaSim, telaNao]) {
+    tela.hidden = tela !== telaVisivel;
+  }
+
+  btnNao.remove();
+  telaVisivel.querySelector("[tabindex='-1']").focus();
+  window.scrollTo(0, 0);
+}
+
 function configurarBotaoNao() {
+  const totalDeFugas = CONFIG.textosDoNao.length;
   let fugas = 0;
   let ultimaFuga = 0;
 
   btnNao.addEventListener("pointerenter", (evento) => {
-    if (evento.pointerType === "mouse") fugir();
+    if (evento.pointerType === "mouse" && fugas < totalDeFugas) fugir();
   });
 
   btnNao.addEventListener("pointerdown", (evento) => {
-    evento.preventDefault();
-    fugir();
+    if (fugas < totalDeFugas) {
+      evento.preventDefault();
+      fugir();
+    }
   });
 
-  btnNao.addEventListener("click", fugir);
+  btnNao.addEventListener("click", () => {
+    if (Date.now() - ultimaFuga < 350) return;
+
+    if (fugas < totalDeFugas) {
+      fugir();
+    } else {
+      responderNao();
+    }
+  });
 
   window.addEventListener("resize", () => {
     if (btnNao.isConnected && btnNao.classList.contains("fugindo")) manterDentroDaTela(btnNao);
   });
 
   function fugir() {
-    if (Date.now() - ultimaFuga < 350) return;
     ultimaFuga = Date.now();
 
     const estavaComFoco = document.activeElement === btnNao;
 
     soltarDoIngresso(btnNao);
-    btnNao.textContent = CONFIG.textosDoNao[fugas % CONFIG.textosDoNao.length];
+    btnNao.textContent = CONFIG.textosDoNao[fugas];
     fugas++;
     moverParaLugarAleatorio(btnNao);
 

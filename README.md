@@ -4,14 +4,14 @@ Página de convite em formato de ingresso: a pessoa responde "Sim" ou "Não", es
 
 ## Como mudar o nome
 
-O nome vem do próprio link, no parâmetro `?nome=`:
+O nome vem do próprio link, no parâmetro `?nome=`, e não fica guardado no repositório:
 
 ```
-https://joaofaccio087.github.io/Convite/?nome=Érika
-https://joaofaccio087.github.io/Convite/?nome=Maria%20Eduarda
+https://joaofaccio087.github.io/Convite/?nome=Fulana
+https://joaofaccio087.github.io/Convite/?nome=Fulana%20de%20Tal
 ```
 
-Espaço vira `%20`. Acentos funcionam direto, mas se o link quebrar no WhatsApp use a versão codificada (`É` vira `%C3%89`). Sem `?nome=`, aparece o `nomePadrao` do `js/config.js`.
+Espaço vira `%20`. Acentos funcionam direto, mas se o link quebrar no WhatsApp use a versão codificada (`É` vira `%C3%89`, `ã` vira `%C3%A3`). Sem `?nome=`, aparece o `nomePadrao` do `js/config.js`, que é um texto neutro.
 
 ## Como personalizar
 
@@ -20,7 +20,7 @@ Tudo que muda de um convite para outro fica em **`js/config.js`**: nome padrão,
 ## Estrutura
 
 ```
-index.html          as duas telas (convite e resposta)
+index.html          as três telas (convite, sim, não)
 css/estilo.css      visual do ingresso, botões e animações
 js/config.js        configurações editáveis
 js/convite.js       lógica: nome, botão que foge, WhatsApp, confetes
@@ -31,7 +31,7 @@ imagem/preview.png  imagem que aparece quando o link é enviado
 ## Como funciona
 
 - **Nome pelo link:** `URLSearchParams` lê o `?nome=` e o texto entra com `textContent`, que não interpreta HTML.
-- **Botão "Não":** foge para sempre, com o mouse (`pointerenter`) e com o toque (`pointerdown`). Na primeira fuga ele vai para o `<body>` com `position: fixed`, e a posição é sorteada dentro da tela, sem cobrir o "Sim". Os `textosDoNao` ficam se repetindo em ciclo.
+- **Botão "Não":** foge com o mouse (`pointerenter`) e com o toque (`pointerdown`). Na primeira fuga ele vai para o `<body>` com `position: fixed`, e a posição é sorteada dentro da tela, sem cobrir o "Sim". Ele foge uma vez para cada item de `textosDoNao` e, depois do último, aceita o clique.
 - **WhatsApp:** o link `https://wa.me/NUMERO?text=MENSAGEM` abre a conversa com a mensagem pronta. A mensagem passa por `encodeURIComponent` para acentos, emojis e quebras de linha funcionarem.
 - **Confetes:** cada partícula tem animação finita, então o evento `animationend` dispara e ela é removida.
 - **Acessibilidade:** botões de verdade, foco visível, opções como `radio` e sem animações para quem ativou "reduzir movimento".
