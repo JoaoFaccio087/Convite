@@ -1,16 +1,12 @@
-/* =============================================================
-   CORES E MEDIDAS
-   Mude as variáveis abaixo para trocar o visual inteiro.
-   ============================================================= */
 :root {
-  --algodao: #FFD3DF;  /* fundo da página */
-  --cereja: #C8102E;   /* ingresso */
-  --papel: #FFF6EE;    /* textos claros e botão Sim */
-  --vinho: #4A0A1C;    /* sombras e botão Não */
-  --dourado: #F2B544;  /* destaques */
+  --algodao: #FFD3DF;
+  --cereja: #C8102E;
+  --papel: #FFF6EE;
+  --vinho: #4A0A1C;
+  --dourado: #F2B544;
 
-  --raio: 22px;        /* arredondamento do ingresso */
-  --furo: 14px;        /* raio dos "furos" na linha picotada */
+  --raio: 22px;
+  --furo: 14px;
 }
 
 *,
@@ -42,12 +38,6 @@ body {
   padding: 24px 16px 40px;
 }
 
-/* =============================================================
-   INGRESSO
-   Duas partes (corpo e canhoto) com meio-círculos "recortados"
-   na junção. O recorte é feito com radial-gradient transparente,
-   e o drop-shadow desenha a sombra seguindo esse formato.
-   ============================================================= */
 .ingresso {
   width: min(100%, 390px);
   color: var(--papel);
@@ -72,8 +62,7 @@ body {
 }
 
 .ingresso__canhoto {
-  margin-top: -1px; /* cobre a fresta de 1px entre as duas partes */
-  padding: 29px 24px 30px;
+  margin-top: -1px;   padding: 29px 24px 30px;
   border-radius: 0 0 var(--raio) var(--raio);
   background-image:
     radial-gradient(circle at 0 0, transparent var(--furo), var(--cereja) calc(var(--furo) + 0.5px)),
@@ -81,7 +70,6 @@ body {
   background-position: left, right;
 }
 
-/* Linha picotada entre o corpo e o canhoto */
 .ingresso__canhoto::before {
   content: "";
   position: absolute;
@@ -99,9 +87,6 @@ body {
   gap: 14px;
 }
 
-/* =============================================================
-   TEXTOS
-   ============================================================= */
 .nome {
   margin: 0;
   font-family: "Shrikhand", Georgia, serif;
@@ -128,6 +113,14 @@ body {
   opacity: 0.9;
 }
 
+.recado {
+  margin: 16px auto 0;
+  max-width: 32ch;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--dourado);
+}
+
 .titulo-resposta {
   margin: 8px 0 0;
   font-family: "Shrikhand", Georgia, serif;
@@ -142,9 +135,6 @@ h2:focus {
   outline: none;
 }
 
-/* =============================================================
-   BOTÕES
-   ============================================================= */
 .botao {
   display: inline-flex;
   justify-content: center;
@@ -192,7 +182,6 @@ h2:focus {
   margin-top: 8px;
 }
 
-/* O "Não" quando está fugindo: sai do ingresso e flutua na tela */
 .botao--nao.fugindo {
   position: fixed;
   z-index: 10;
@@ -201,9 +190,6 @@ h2:focus {
   transition: left 0.28s ease-out, top 0.28s ease-out;
 }
 
-/* =============================================================
-   CARIMBO (tela do Sim)
-   ============================================================= */
 .carimbo {
   display: block;
   width: 150px;
@@ -228,10 +214,6 @@ h2:focus {
   }
 }
 
-/* =============================================================
-   OPÇÕES DE DIA E LUGAR
-   Cada opção é um <input type="radio"> escondido + um <span> visível.
-   ============================================================= */
 .escolha {
   margin: 0 0 18px;
   padding: 0;
@@ -281,9 +263,6 @@ h2:focus {
   outline-offset: 2px;
 }
 
-/* =============================================================
-   CORAÇÕES E CONFETES
-   ============================================================= */
 .efeitos {
   position: fixed;
   inset: 0;
@@ -322,10 +301,6 @@ h2:focus {
   }
 }
 
-/* =============================================================
-   MENOS MOVIMENTO
-   Quem ativou "reduzir movimento" no celular não vê animações.
-   ============================================================= */
 @media (prefers-reduced-motion: reduce) {
   .carimbo {
     animation: none;

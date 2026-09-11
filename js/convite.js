@@ -1,135 +1,88 @@
-// =============================================================
-//  LÓGICA DO CONVITE
-//  1. Lê o nome do link (?nome=...)
-//  2. Faz o "Não" fugir algumas vezes antes de aceitar
-//  3. Mostra a tela certa depois da resposta
-//  4. Monta o link do WhatsApp com a resposta
-//  Os textos e opções ficam em js/config.js.
-// =============================================================
-
 const nome = lerNome();
 const reduzirMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const telaConvite = document.getElementById("tela-convite");
 const telaSim = document.getElementById("tela-sim");
-const telaNao = document.getElementById("tela-nao");
 const btnSim = document.getElementById("btn-sim");
 const btnNao = document.getElementById("btn-nao");
 const linkSim = document.getElementById("link-sim");
-const linkNao = document.getElementById("link-nao");
 const efeitos = document.getElementById("efeitos");
 
 iniciar();
 
 function iniciar() {
-  // textContent (e não innerHTML) garante que o nome vindo do link
-  // aparece só como texto, sem conseguir injetar HTML na página.
   document.getElementById("nome").textContent = nome;
   document.title = `Convite para ${nome}`;
+  mostrarRecado();
 
   criarOpcoes("opcoes-dia", "dia", CONFIG.opcoesDeDia);
   criarOpcoes("opcoes-lugar", "lugar", CONFIG.opcoesDeLugar);
 
-  // { once: true } faz o clique no Sim valer só uma vez
   btnSim.addEventListener("click", responderSim, { once: true });
   configurarBotaoNao();
 
-  // Sempre que ela marcar uma opção, o link do WhatsApp é refeito
   telaSim.addEventListener("change", atualizarLinkSim);
   atualizarLinkSim();
-
-  linkNao.href = linkWhatsApp(
-    `Oi, ${CONFIG.seuNome}! Valeu pelo convite, mas dessa vez não vai rolar 🙂`
-  );
 }
 
-// -------------------------------------------------------------
-//  NOME PELO LINK
-// -------------------------------------------------------------
 function lerNome() {
   const parametros = new URLSearchParams(window.location.search);
   const nomeDoLink = (parametros.get("nome") || "").trim().slice(0, 30);
   return nomeDoLink || CONFIG.nomePadrao;
 }
 
-// -------------------------------------------------------------
-//  RESPOSTAS
-// -------------------------------------------------------------
+function mostrarRecado() {
+  const recado = document.getElementById("recado");
+  if (CONFIG.recado) {
+    recado.textContent = CONFIG.recado;
+  } else {
+    recado.remove();
+  }
+}
+
 function responderSim() {
-  mostrarTela(telaSim);
+  telaConvite.hidden = true;
+  telaSim.hidden = false;
+  btnNao.remove();
+  document.getElementById("titulo-sim").focus();
+  window.scrollTo(0, 0);
   soltarCoracoes();
 }
 
-function responderNao() {
-  mostrarTela(telaNao);
-}
-
-function mostrarTela(telaVisivel) {
-  for (const tela of [telaConvite, telaSim, telaNao]) {
-    tela.hidden = tela !== telaVisivel;
-  }
-
-  // Se o "Não" estava fugindo, ele está solto no <body>: some com ele
-  btnNao.remove();
-
-  // Leva o foco para o título da nova tela (ajuda leitores de tela)
-  telaVisivel.querySelector("[tabindex='-1']").focus();
-  window.scrollTo(0, 0);
-}
-
-// -------------------------------------------------------------
-//  BOTÃO "NÃO" QUE FOGE
-// -------------------------------------------------------------
 function configurarBotaoNao() {
-  const totalDeFugas = CONFIG.textosDoNao.length;
   let fugas = 0;
   let ultimaFuga = 0;
 
-  // Mouse: foge quando o cursor encosta
   btnNao.addEventListener("pointerenter", (evento) => {
-    if (evento.pointerType === "mouse" && fugas < totalDeFugas) fugir();
+    if (evento.pointerType === "mouse") fugir();
   });
 
-  // Celular: foge quando o dedo toca (não existe "hover" no toque)
   btnNao.addEventListener("pointerdown", (evento) => {
-    if (fugas < totalDeFugas) {
-      evento.preventDefault();
-      fugir();
-    }
+    evento.preventDefault();
+    fugir();
   });
 
-  // Clique de verdade (ou Enter no teclado)
-  btnNao.addEventListener("click", () => {
-    // Ignora o clique que o navegador dispara logo depois do toque que fez fugir
-    if (Date.now() - ultimaFuga < 400) return;
+  btnNao.addEventListener("click", fugir);
 
-    if (fugas < totalDeFugas) {
-      fugir();
-    } else {
-      responderNao();
-    }
-  });
-
-  // Se a tela girar/redimensionar, traz o botão de volta para dentro
   window.addEventListener("resize", () => {
-    if (btnNao.classList.contains("fugindo")) manterDentroDaTela(btnNao);
+    if (btnNao.isConnected && btnNao.classList.contains("fugindo")) manterDentroDaTela(btnNao);
   });
 
   function fugir() {
+    if (Date.now() - ultimaFuga < 350) return;
+    ultimaFuga = Date.now();
+
     const estavaComFoco = document.activeElement === btnNao;
 
     soltarDoIngresso(btnNao);
-    btnNao.textContent = CONFIG.textosDoNao[fugas];
+    btnNao.textContent = CONFIG.textosDoNao[fugas % CONFIG.textosDoNao.length];
     fugas++;
-    ultimaFuga = Date.now();
     moverParaLugarAleatorio(btnNao);
 
     if (estavaComFoco) btnNao.focus({ preventScroll: true });
   }
 }
 
-// Na primeira fuga, o botão sai do ingresso e vai para o <body>
-// com position: fixed, começando exatamente de onde estava.
 function soltarDoIngresso(botao) {
   if (botao.classList.contains("fugindo")) return;
 
@@ -138,9 +91,6 @@ function soltarDoIngresso(botao) {
   botao.classList.add("fugindo");
   botao.style.left = `${posicao.left}px`;
   botao.style.top = `${posicao.top}px`;
-
-  // Força o navegador a aplicar a posição inicial antes de mudar,
-  // senão a transição (animação do movimento) não acontece.
   botao.getBoundingClientRect();
 }
 
@@ -154,7 +104,6 @@ function moverParaLugarAleatorio(botao) {
   const atual = botao.getBoundingClientRect();
   const areaDoSim = btnSim.getBoundingClientRect();
 
-  // Sorteia até achar um lugar que não cubra o "Sim" e fique longe de onde estava
   let x;
   let y;
   for (let tentativa = 0; tentativa < 30; tentativa++) {
@@ -179,9 +128,6 @@ function manterDentroDaTela(botao) {
   botao.style.top = `${limitar(parseFloat(botao.style.top), margem, maxY)}px`;
 }
 
-// -------------------------------------------------------------
-//  OPÇÕES DE DIA E LUGAR
-// -------------------------------------------------------------
 function criarOpcoes(idDoContainer, grupo, opcoes) {
   const container = document.getElementById(idDoContainer);
 
@@ -207,9 +153,6 @@ function opcaoEscolhida(grupo) {
   return marcada ? marcada.value : CONFIG.semEscolha;
 }
 
-// -------------------------------------------------------------
-//  WHATSAPP
-// -------------------------------------------------------------
 function atualizarLinkSim() {
   const mensagem =
     `Oi, ${CONFIG.seuNome}! Aceito sair com você 😊\n\n` +
@@ -220,13 +163,10 @@ function atualizarLinkSim() {
 }
 
 function linkWhatsApp(mensagem) {
-  const numero = CONFIG.whatsapp.replace(/\D/g, ""); // deixa só os dígitos
+  const numero = CONFIG.whatsapp.replace(/\D/g, "");
   return `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 }
 
-// -------------------------------------------------------------
-//  CORAÇÕES E CONFETES
-// -------------------------------------------------------------
 function soltarCoracoes() {
   if (reduzirMovimento) return;
 
@@ -246,15 +186,11 @@ function soltarCoracoes() {
     particula.style.animationDuration = `${sortear(2200, 3800)}ms`;
     particula.style.animationDelay = `${sortear(0, 700)}ms`;
 
-    // A animação não é infinita, então "animationend" dispara e a partícula some
     particula.addEventListener("animationend", () => particula.remove());
     efeitos.appendChild(particula);
   }
 }
 
-// -------------------------------------------------------------
-//  AJUDANTES
-// -------------------------------------------------------------
 function sortear(min, max) {
   return Math.round(min + Math.random() * (max - min));
 }

@@ -14,7 +14,7 @@ const CONFIG = {
 
   // Seu WhatsApp: 55 + DDD + número, só dígitos. Ex: "5565999998888".
   // Se ficar vazio, o WhatsApp abre e pede para ela escolher o contato.
-  whatsapp: "",
+  whatsapp: "5565996943391",
 
   // O que o botão "Não" vai dizendo a cada fuga.
   // Ele foge uma vez para cada texto; depois do último, aceita o clique.

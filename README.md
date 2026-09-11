@@ -15,12 +15,12 @@ Espaço vira `%20`. Acentos funcionam direto, mas se o link quebrar no WhatsApp 
 
 ## Como personalizar
 
-Tudo que muda de um convite para outro fica em **`js/config.js`**: nome padrão, seu nome, seu WhatsApp, os textos do botão "Não" e as opções de dia e lugar. As cores ficam nas variáveis do topo de **`css/estilo.css`**.
+Tudo que muda de um convite para outro fica em **`js/config.js`**: nome padrão, recado, seu nome, seu WhatsApp, os textos do botão "Não" e as opções de dia e lugar. Deixe `recado` como `""` para não mostrar nenhum aviso. As cores ficam nas variáveis do topo de **`css/estilo.css`**.
 
 ## Estrutura
 
 ```
-index.html          as três telas (convite, sim, não)
+index.html          as duas telas (convite e resposta)
 css/estilo.css      visual do ingresso, botões e animações
 js/config.js        configurações editáveis
 js/convite.js       lógica: nome, botão que foge, WhatsApp, confetes
@@ -31,7 +31,7 @@ imagem/preview.png  imagem que aparece quando o link é enviado
 ## Como funciona
 
 - **Nome pelo link:** `URLSearchParams` lê o `?nome=` e o texto entra com `textContent`, que não interpreta HTML.
-- **Botão "Não":** foge com o mouse (`pointerenter`) e com o toque (`pointerdown`). Na primeira fuga ele vai para o `<body>` com `position: fixed`, e a posição é sorteada dentro da tela, sem cobrir o "Sim". Depois de passar por todos os `textosDoNao`, ele aceita o clique.
+- **Botão "Não":** foge para sempre, com o mouse (`pointerenter`) e com o toque (`pointerdown`). Na primeira fuga ele vai para o `<body>` com `position: fixed`, e a posição é sorteada dentro da tela, sem cobrir o "Sim". Os `textosDoNao` ficam se repetindo em ciclo.
 - **WhatsApp:** o link `https://wa.me/NUMERO?text=MENSAGEM` abre a conversa com a mensagem pronta. A mensagem passa por `encodeURIComponent` para acentos, emojis e quebras de linha funcionarem.
 - **Confetes:** cada partícula tem animação finita, então o evento `animationend` dispara e ela é removida.
 - **Acessibilidade:** botões de verdade, foco visível, opções como `radio` e sem animações para quem ativou "reduzir movimento".
